@@ -1,0 +1,15 @@
+# Object and library files
+*.o
+*.obj
+*.lib
+*.a
+
+# Executables (with and without common extensions)
+*.exe
+*.out
+a.out
+
+# Directories created by build systems (optional but recommended)
+bin/
+obj/
+
