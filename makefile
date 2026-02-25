@@ -79,4 +79,4 @@ d-%:
 
 clean:
 	rm -f *.o
-	rm -f randomarr hello
+	rm -f randomarr 
