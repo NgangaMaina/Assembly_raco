@@ -77,6 +77,9 @@ d-%:
 
 .PHONY: clean
 
+BINARIES := $(basename $(wildcard *.asm))
+
 clean:
 	rm -f *.o
-	rm -f randomarr 
+	rm -f $(BINARIES)
+
