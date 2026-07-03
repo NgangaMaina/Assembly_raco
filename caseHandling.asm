@@ -1,5 +1,6 @@
 section .bss
-	Buff resb 1
+	BUFFLEN equ 128
+	Buff resb BUFFLEN
 
 section .data
 
@@ -14,27 +15,36 @@ Read:
 	mov rax, 0	;Sys read
 	mov rdi, 0	;File descriptor
 	mov rsi, Buff	;Address of buffer to read to
-	mov rdx, 1
+	mov rdx, BUFFLEN
 	syscall
-
+	mov r12, rax
 	cmp rax, 0
-	je Exit
+	je Done
 
-	cmp byte [Buff], 61h	;Test input data against lowercase 'a'
-	jb Write		;If below 'a' in ASCII chart, not lowercase
-	cmp byte [Buff], 7Ah	;Test against lowercase 'z'
-	ja Write		;If above 'z', not lowercase
+	mov rbx, rax
+	mov r13, Buff
+	dec r13
 
-	sub byte [Buff], 20h	;Subtracted from lowercase to give uppercase
+Scan:
+	cmp byte [r13+rbx], 61h	;Test input data against lowercase 'a'
+	jb .Next		;If below 'a' in ASCII chart, not lowercase
+	cmp byte [r13+rbx], 7Ah	;Test against lowercase 'z'
+	ja .Next		;If above 'z', not lowercase
+
+	sub byte [r13+rbx], 20h	;Subtracted from lowercase to give uppercase
+.Next:
+	dec rbx
+	cmp rbx, 0
+	jnz Scan
 
 Write:
 	mov rax, 1
 	mov rdi, 1
 	mov rsi, Buff
-	mov rdx, 1
+	mov rdx, r12
 	syscall
 	jmp Read
-Exit:
+Done:
 	mov rax, 60
 	xor rdi, rdi
 	syscall
